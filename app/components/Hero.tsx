@@ -2,10 +2,12 @@
 
 import { motion } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
+import { useReveal } from "./RevealProvider";
 
 export default function Hero() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const reveal = useReveal();
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 640px)');
@@ -17,8 +19,15 @@ export default function Hero() {
 
   const handleCTAClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    const el = document.getElementById('classes');
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    const rect = (e.target as HTMLElement).getBoundingClientRect();
+    const start = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+    try {
+      // trigger reveal and scroll to classes
+      reveal.revealTo("classes", start);
+    } catch (err) {
+      const el = document.getElementById("classes");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   return (
@@ -56,7 +65,7 @@ export default function Hero() {
           className="text-center px-12 max-md:px-4"
         >
           <h1 className="text-6xl max-md:text-3xl font-extrabold text-white leading-tight">
-            Srab Karate Art Academy
+            SRAB Karate Arts Academy
           </h1>
 
           <motion.p
@@ -71,7 +80,7 @@ export default function Hero() {
           <motion.button
             onClick={handleCTAClick}
             whileHover={{ scale: 1.03 }}
-            className="inline-block mt-8 px-6 py-3 bg-red-600 text-black font-semibold rounded shadow-md focus:outline-none focus:ring-2 focus:ring-red-400"
+            className="inline-block mt-8 px-6 py-3 bg-sky-600 text-black font-semibold rounded shadow-md focus:outline-none focus:ring-2 focus:ring-red-400"
           >
             Join a Free Class
           </motion.button>
