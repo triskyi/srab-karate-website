@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 export default function Home() {
   return (
@@ -59,6 +60,56 @@ export default function Home() {
             Documentation
           </a>
         </div>
+
+        {/* About Section */}
+        <section className="px-6 py-12 bg-white md:px-12 md:py-24">
+          <div className="grid items-center gap-8 md:grid-cols-2">
+            <div>
+              <h2 className="text-3xl font-bold text-black md:text-4xl">
+                About Srab Karate Art Academy
+              </h2>
+              <p className="mt-4 text-lg text-gray-700">
+                At Srab Karate Art Academy, we believe in empowering individuals
+                through the art of karate. Our experienced instructors are dedicated
+                to helping students of all ages and skill levels achieve their
+                goals.
+              </p>
+            </div>
+            <div className="relative w-full h-64 md:h-96">
+              <Image
+                src="/path-to-instructor-or-class-image.jpg"
+                alt="Instructors or Class"
+                layout="fill"
+                objectFit="cover"
+                className="rounded-lg"
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Classes Section */}
+        <section className="px-6 py-12 bg-gray-100 md:px-12 md:py-24">
+          <h2 className="text-3xl font-bold text-center text-black md:text-4xl">Our Classes</h2>
+          <div className="grid gap-8 mt-8 md:grid-cols-3">
+            {[
+              { name: 'Beginner Karate', age: '5-10', description: 'Learn the basics of karate in a fun and engaging environment.' },
+              { name: 'Intermediate Karate', age: '11-15', description: 'Build on your skills and learn advanced techniques.' },
+              { name: 'Advanced Karate', age: '16+', description: 'Master the art of karate with our expert instructors.' },
+            ].map((cls, index) => (
+              <div
+                key={index}
+                className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300"
+              >
+                <h3 className="text-xl font-semibold text-red-500">{cls.name}</h3>
+                <p className="mt-2 text-sm text-gray-600">Age Group: {cls.age}</p>
+                <p className="mt-4 text-gray-700">{cls.description}</p>
+                <button className="px-4 py-2 mt-4 text-white bg-red-500 rounded hover:bg-red-600">
+                  Book Now
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
       </main>
     </div>
   );
