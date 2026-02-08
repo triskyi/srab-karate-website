@@ -1,10 +1,19 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 
 export default function Hero() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 640px)');
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener?.('change', update);
+    return () => mq.removeEventListener?.('change', update);
+  }, []);
 
   const handleCTAClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -13,18 +22,28 @@ export default function Hero() {
   };
 
   return (
-    // Hero Section with video background
-    <section id="hero" className="relative h-screen overflow-hidden">
-      <video
-        ref={videoRef}
-        className="absolute inset-0 w-full h-full object-cover"
-        autoPlay
-        muted
-        loop
-        playsInline
-      >
+    // Hero Section with video background (mobile falls back to poster image)
+    <section id="hero" className="relative h-screen max-md:h-[70vh] overflow-hidden">
+      {!isMobile ? (
+        <video
+          ref={videoRef}
+          className="absolute inset-0 w-full h-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+        >
           <source src="/video.mp4" type="video/mp4" />
-      </video>
+        </video>
+      ) : (
+        // Mobile fallback: use background image for better performance and reliability
+        <div
+          className="absolute inset-0 w-full h-full bg-center bg-cover"
+          style={{ backgroundImage: `url('/video-poster.jpg')` }}
+          role="img"
+          aria-label="Karate training"
+        />
+      )}
 
       {/* dark overlay for contrast (decorative) */}
       <div className="absolute inset-0 bg-black/50" aria-hidden="true" />
@@ -34,9 +53,9 @@ export default function Hero() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center px-12 max-md:px-6"
+          className="text-center px-12 max-md:px-4"
         >
-          <h1 className="text-6xl max-md:text-4xl font-extrabold text-white leading-tight">
+          <h1 className="text-6xl max-md:text-3xl font-extrabold text-white leading-tight">
             Srab Karate Art Academy
           </h1>
 
@@ -44,7 +63,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.35 }}
-            className="mt-4 text-2xl max-md:text-lg text-white"
+            className="mt-4 text-2xl max-md:text-base text-white"
           >
             Train hard. Achieve greatness.
           </motion.p>
@@ -52,7 +71,7 @@ export default function Hero() {
           <motion.button
             onClick={handleCTAClick}
             whileHover={{ scale: 1.03 }}
-            className="inline-block mt-8 px-8 py-3 bg-red-600 text-black font-semibold rounded shadow-md focus:outline-none focus:ring-2 focus:ring-red-400"
+            className="inline-block mt-8 px-6 py-3 bg-red-600 text-black font-semibold rounded shadow-md focus:outline-none focus:ring-2 focus:ring-red-400"
           >
             Join a Free Class
           </motion.button>
